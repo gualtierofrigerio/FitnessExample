@@ -1,0 +1,12 @@
+# FitnessExample
+
+A simple app to test interaction between iPhone and Apple Watch and HealthKit 
+
+## Author
+
+gualtierofrigerio, gualtiero.frigerio@gmail.com
+
+## License
+
+FolderImageViewer is available under the MIT license. See the LICENSE file for more info.
+
