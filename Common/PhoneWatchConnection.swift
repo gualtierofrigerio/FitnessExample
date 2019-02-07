@@ -15,8 +15,10 @@ import Foundation
  for the caller to be notified every time new data is send through the common session
  */
 
+typealias PhoneWatchSharedData = [String:Any]
+
 protocol PhoneWatchConnection {
-    func synchronizeData(_ data:[String:Any])
-    func getLastData() -> [String:Any]
-    func getUpdatedData(callback: @escaping([String:Any]) ->Void)
+    func synchronizeData(_ data:PhoneWatchSharedData)
+    func getLastData() -> PhoneWatchSharedData
+    func getUpdatedData(callback: @escaping(PhoneWatchSharedData) ->Void)
 }

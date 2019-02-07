@@ -11,7 +11,7 @@ import WatchConnectivity
 class WatchConnectionHandler : NSObject {
     
     let session = WCSession.default
-    var updateCallback:(([String:Any]) ->Void)?
+    var updateCallback:((PhoneWatchSharedData) ->Void)?
     
     override init() {
         super.init()
@@ -22,15 +22,15 @@ class WatchConnectionHandler : NSObject {
 
 extension WatchConnectionHandler : PhoneWatchConnection {
 
-    func synchronizeData(_ data: [String : Any]) {
+    func synchronizeData(_ data: PhoneWatchSharedData) {
         
     }
     
-    func getLastData() -> [String : Any] {
+    func getLastData() -> PhoneWatchSharedData {
         return session.applicationContext
     }
     
-    func getUpdatedData(callback: @escaping ([String : Any]) -> Void) {
+    func getUpdatedData(callback: @escaping (PhoneWatchSharedData) -> Void) {
         updateCallback = callback
     }
 }

@@ -12,11 +12,18 @@ class WorkoutTableViewController: UITableViewController {
 
     var workoutManager = WorkoutManager()
     var connectionHandler = PhoneConnectionHandler()
+    var healthKitManager = HealthKitManager.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         sendDataToWatch()
+        
+        healthKitManager.requestAuthorization { (success) in
+            if success == false {
+                print("error while getting authorization")
+            }
+        }
     }
     
     @IBAction func actionsButtonTap(_ sender: Any) {

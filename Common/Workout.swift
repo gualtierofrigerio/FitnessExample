@@ -14,6 +14,7 @@ struct Workout : Codable {
     var description:String!
     var startDate:Date?
     var endDate:Date?
+    var averageHeartRate:Int?
     
     init(title:String, description:String) {
         self.title = title
@@ -36,6 +37,13 @@ struct Workout : Codable {
             return formatDate(date)
         }
         return nil
+    }
+    
+    func getHeartRateStringValue() -> String {
+        if let rate = averageHeartRate {
+            return String(rate) + " bpm"
+        }
+        return "n/a"
     }
 }
 

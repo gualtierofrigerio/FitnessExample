@@ -14,6 +14,7 @@ class WorkoutViewController: UIViewController {
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
+    @IBOutlet weak var heartRateLabel: UILabel!
     
     var workoutManager:WorkoutManager?
     var workoutIndex:Int = 0
@@ -29,6 +30,7 @@ class WorkoutViewController: UIViewController {
         descriptionTextView.text = workout.description
         startDateLabel.text = workout.getStartDateString()
         endDateLabel.text = workout.getEndDateString()
+        heartRateLabel.text = workout.getHeartRateStringValue()
     }
     
     

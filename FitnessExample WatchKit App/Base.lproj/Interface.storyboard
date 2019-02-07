@@ -64,6 +64,12 @@
                         <label width="136" alignment="left" text="Label" id="PVY-rP-qfx"/>
                         <imageView alignment="left" id="Btc-o5-pCN"/>
                         <label width="136" alignment="left" text="Label" id="pN7-wA-cIp"/>
+                        <group width="1" alignment="left" id="wHx-WL-eRC">
+                            <items>
+                                <label height="20" alignment="left" text="BPM" id="vhX-Ph-cr1"/>
+                                <label alignment="left" text="Label" id="Zz1-6A-hTT"/>
+                            </items>
+                        </group>
                         <button width="1" alignment="left" title="Start" id="sh3-vP-5Ai">
                             <connections>
                                 <action selector="workoutButtonTap" destination="eFd-Oz-XOa" id="Wvu-T4-V4l"/>
@@ -72,13 +78,14 @@
                     </items>
                     <connections>
                         <outlet property="descriptionLabel" destination="pN7-wA-cIp" id="jGN-Zn-pT3"/>
+                        <outlet property="heartBeatLabel" destination="Zz1-6A-hTT" id="0Ze-xv-Byf"/>
                         <outlet property="titleLabel" destination="PVY-rP-qfx" id="A8F-Rr-dnG"/>
                         <outlet property="workoutButton" destination="sh3-vP-5Ai" id="j2T-8m-C63"/>
                         <outlet property="workoutImage" destination="Btc-o5-pCN" id="9A5-4O-SAh"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="531" y="345"/>
+            <point key="canvasLocation" x="531" y="344"/>
         </scene>
         <!--Notification Controller-->
         <scene sceneID="ZPc-GJ-vnh">

@@ -15,6 +15,7 @@ class WorkoutListInterfaceController: WKInterfaceController {
     var connectionHandler:WatchConnectionHandler?
     var workoutManager:WorkoutManager?
     var workouts = [Workout]()
+    let healthKitManager = HealthKitManager.sharedInstance
     
     @IBOutlet weak var workoutTable: WKInterfaceTable!
     
@@ -27,6 +28,7 @@ class WorkoutListInterfaceController: WKInterfaceController {
                 self.getWorkoutsFromData(data)
             })
             getInitialData()
+            
         }
     }
     

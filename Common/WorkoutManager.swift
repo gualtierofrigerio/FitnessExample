@@ -81,12 +81,13 @@ class WorkoutManager : NSObject {
         workout.startDate = Date()
         workouts[index] = workout
     }
-    func endWorkout(atIndex index:Int) {
+    func endWorkout(atIndex index:Int, averageHeartRate:Int = 0) {
         if workouts.count < index - 1 {
             return
         }
         var workout = workouts[index]
         workout.endDate = Date()
+        workout.averageHeartRate = averageHeartRate
         workouts[index] = workout
     }
     
@@ -117,11 +118,11 @@ class WorkoutManager : NSObject {
         }
     }
     
-    func getDataForAllWorkouts() -> [String:Any] {
+    func getDataForAllWorkouts() -> PhoneWatchSharedData {
         return WorkoutManager.makeSharableData(forWorkouts: workouts)
     }
     
-    func getDataForWorkout(atIndex index:Int) -> [String:Any]? {
+    func getDataForWorkout(atIndex index:Int) -> PhoneWatchSharedData? {
         guard let workout = getWorkout(atIndex: index) else {return nil}
         return WorkoutManager.makeSharableData(forWorkout: workout, atIndex: index)
     }
@@ -137,8 +138,8 @@ extension WorkoutManager {
         return [w1, w2]
     }
     
-    private static func makeContext(withCodableData data: SharedWorkout) -> [String : Any] {
-        var encodedDictionary = [String:Any]()
+    private static func makeContext(withCodableData data: SharedWorkout) -> PhoneWatchSharedData {
+        var encodedDictionary = PhoneWatchSharedData()
         do {
             let sharedValue = try JSONEncoder().encode(data)
             encodedDictionary["data"] = sharedValue
@@ -153,17 +154,17 @@ extension WorkoutManager {
 // MARK: - Static Utility functions
 
 extension WorkoutManager {
-    static func makeSharableData(forWorkouts workouts:[Workout]) -> [String:Any] {
+    static func makeSharableData(forWorkouts workouts:[Workout]) -> PhoneWatchSharedData {
         let sharedWorkout = SharedWorkout(isSingle: false, index: 0, workouts: workouts)
         return makeContext(withCodableData: sharedWorkout)
     }
     
-    static func makeSharableData(forWorkout workout:Workout, atIndex:Int) -> [String:Any] {
+    static func makeSharableData(forWorkout workout:Workout, atIndex:Int) -> PhoneWatchSharedData {
         let sharedWorkout = SharedWorkout(isSingle: true, index: atIndex, workouts: [workout])
         return makeContext(withCodableData: sharedWorkout)
     }
     
-    static func getSharedWorkout(fromData:[String : Any]) -> SharedWorkout? {
+    static func getSharedWorkout(fromData:PhoneWatchSharedData) -> SharedWorkout? {
         do {
             if let data = fromData["data"] as? Data {
                 let shared = try JSONDecoder().decode(SharedWorkout.self, from: data)

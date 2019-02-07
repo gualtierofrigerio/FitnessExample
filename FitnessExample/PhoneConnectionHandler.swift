@@ -11,7 +11,7 @@ import WatchConnectivity
 class PhoneConnectionHandler : NSObject {
     
     var session:WCSession!
-    var pendingContext:[String:Any]?
+    var pendingContext:PhoneWatchSharedData?
     var filePath:String!
     
     override init() {
@@ -20,7 +20,7 @@ class PhoneConnectionHandler : NSObject {
         filePath = documentsPath + "/workouts.json"
     }
     
-    func initSession(withPendingContext: [String:Any]) {
+    func initSession(withPendingContext: PhoneWatchSharedData) {
         if WCSession.isSupported() {
             session = WCSession.default
             session.delegate = self
@@ -29,7 +29,7 @@ class PhoneConnectionHandler : NSObject {
         }
     }
     
-    func sendDataToWatch(_ context:[String:Any]) {
+    func sendDataToWatch(_ context:PhoneWatchSharedData) {
         if session == nil {
             initSession(withPendingContext: context)
         }
@@ -40,11 +40,11 @@ class PhoneConnectionHandler : NSObject {
 }
 
 extension PhoneConnectionHandler : PhoneWatchConnection {
-    func synchronizeData(_ data:[String:Any]) {
+    func synchronizeData(_ data:PhoneWatchSharedData) {
         sendDataToWatch(data)
     }
     
-    func getUpdatedData(callback: ([String : Any]) -> Void) {
+    func getUpdatedData(callback: (PhoneWatchSharedData) -> Void) {
         // empty implementation
     }
     

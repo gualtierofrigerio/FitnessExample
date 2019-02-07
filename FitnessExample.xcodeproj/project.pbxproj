@@ -31,6 +31,10 @@
 		25A08F6C220AFDB200D6B7E3 /* WorkoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A08F6B220AFDB200D6B7E3 /* WorkoutViewController.swift */; };
 		25A08F6E220B225700D6B7E3 /* PhoneWatchConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A08F6D220B225700D6B7E3 /* PhoneWatchConnection.swift */; };
 		25A08F6F220B225700D6B7E3 /* PhoneWatchConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A08F6D220B225700D6B7E3 /* PhoneWatchConnection.swift */; };
+		25A08F71220C235600D6B7E3 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A08F70220C235600D6B7E3 /* HealthKitManager.swift */; };
+		25A08F72220C235600D6B7E3 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A08F70220C235600D6B7E3 /* HealthKitManager.swift */; };
+		25A08F78220C315200D6B7E3 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A08F77220C315200D6B7E3 /* HealthKit.framework */; };
+		25A08F7B220C317400D6B7E3 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A08F7A220C317400D6B7E3 /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +106,11 @@
 		25A08F69220AD6DB00D6B7E3 /* WorkoutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTableViewController.swift; sourceTree = "<group>"; };
 		25A08F6B220AFDB200D6B7E3 /* WorkoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutViewController.swift; sourceTree = "<group>"; };
 		25A08F6D220B225700D6B7E3 /* PhoneWatchConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchConnection.swift; sourceTree = "<group>"; };
+		25A08F70220C235600D6B7E3 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		25A08F73220C30EC00D6B7E3 /* FitnessExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FitnessExample.entitlements; sourceTree = "<group>"; };
+		25A08F77220C315200D6B7E3 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		25A08F79220C317400D6B7E3 /* FitnessExample WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "FitnessExample WatchKit Extension.entitlements"; sourceTree = "<group>"; };
+		25A08F7A220C317400D6B7E3 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25A08F78220C315200D6B7E3 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25A08F7B220C317400D6B7E3 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +141,7 @@
 				2594893F22099B1700A3A13E /* FitnessExample WatchKit App */,
 				2594894E22099B1700A3A13E /* FitnessExample WatchKit Extension */,
 				2594892A22099B1400A3A13E /* Products */,
+				25A08F74220C30EC00D6B7E3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -146,6 +158,7 @@
 		2594892B22099B1400A3A13E /* FitnessExample */ = {
 			isa = PBXGroup;
 			children = (
+				25A08F73220C30EC00D6B7E3 /* FitnessExample.entitlements */,
 				2594892C22099B1400A3A13E /* AppDelegate.swift */,
 				25A08F672209D89400D6B7E3 /* PhoneConnectionHandler.swift */,
 				25A08F69220AD6DB00D6B7E3 /* WorkoutTableViewController.swift */,
@@ -171,6 +184,7 @@
 		2594894E22099B1700A3A13E /* FitnessExample WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				25A08F79220C317400D6B7E3 /* FitnessExample WatchKit Extension.entitlements */,
 				2594895122099B1700A3A13E /* ExtensionDelegate.swift */,
 				2594895322099B1700A3A13E /* NotificationController.swift */,
 				25A08F5B2209AA6900D6B7E3 /* WatchConnectionHandler.swift */,
@@ -187,11 +201,21 @@
 		25A08F5D2209ACCE00D6B7E3 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				25A08F5E2209ACED00D6B7E3 /* Workout.swift */,
+				25A08F70220C235600D6B7E3 /* HealthKitManager.swift */,
 				25A08F6D220B225700D6B7E3 /* PhoneWatchConnection.swift */,
+				25A08F5E2209ACED00D6B7E3 /* Workout.swift */,
 				25A08F642209D00F00D6B7E3 /* WorkoutManager.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		25A08F74220C30EC00D6B7E3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				25A08F7A220C317400D6B7E3 /* HealthKit.framework */,
+				25A08F77220C315200D6B7E3 /* HealthKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,12 +286,22 @@
 				TargetAttributes = {
 					2594892822099B1400A3A13E = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
+						};
 					};
 					2594893A22099B1700A3A13E = {
 						CreatedOnToolsVersion = 10.1;
 					};
 					2594894922099B1700A3A13E = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.HealthKit.watchos = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -328,6 +362,7 @@
 			files = (
 				25A08F6C220AFDB200D6B7E3 /* WorkoutViewController.swift in Sources */,
 				25A08F652209D00F00D6B7E3 /* WorkoutManager.swift in Sources */,
+				25A08F71220C235600D6B7E3 /* HealthKitManager.swift in Sources */,
 				25A08F6A220AD6DB00D6B7E3 /* WorkoutTableViewController.swift in Sources */,
 				25A08F6E220B225700D6B7E3 /* PhoneWatchConnection.swift in Sources */,
 				25A08F682209D89400D6B7E3 /* PhoneConnectionHandler.swift in Sources */,
@@ -348,6 +383,7 @@
 				25A08F662209D00F00D6B7E3 /* WorkoutManager.swift in Sources */,
 				25A08F6F220B225700D6B7E3 /* PhoneWatchConnection.swift in Sources */,
 				2594895022099B1700A3A13E /* WorkoutListInterfaceController.swift in Sources */,
+				25A08F72220C235600D6B7E3 /* HealthKitManager.swift in Sources */,
 				25A08F602209ACED00D6B7E3 /* Workout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -515,7 +551,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "FitnessExample WatchKit Extension/FitnessExample WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X7Z3LJC27G;
 				INFOPLIST_FILE = "FitnessExample WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -536,7 +574,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "FitnessExample WatchKit Extension/FitnessExample WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X7Z3LJC27G;
 				INFOPLIST_FILE = "FitnessExample WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -593,7 +633,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FitnessExample/FitnessExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X7Z3LJC27G;
 				INFOPLIST_FILE = FitnessExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -610,7 +652,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FitnessExample/FitnessExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X7Z3LJC27G;
 				INFOPLIST_FILE = FitnessExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
