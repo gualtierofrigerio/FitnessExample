@@ -24,6 +24,10 @@ class WorkoutTableViewController: UITableViewController {
                 print("error while getting authorization")
             }
         }
+        
+        connectionHandler.getUpdatedData { data in
+            self.workoutManager.updateWithSharedData(data)
+        }
     }
     
     @IBAction func actionsButtonTap(_ sender: Any) {
@@ -96,6 +100,6 @@ extension WorkoutTableViewController {
 extension WorkoutTableViewController {
     func sendDataToWatch() {
         let data = self.workoutManager.getDataForAllWorkouts()
-        self.connectionHandler.sendDataToWatch(data)
+        self.connectionHandler.sendDataToCounterpart(data)
     }
 }

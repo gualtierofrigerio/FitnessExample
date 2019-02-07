@@ -8,10 +8,8 @@
 
 import WatchConnectivity
 
-class PhoneConnectionHandler : NSObject {
+class PhoneConnectionHandler : PhoneWatchConnectionHandler {
     
-    var session:WCSession!
-    var pendingContext:PhoneWatchSharedData?
     var filePath:String!
     
     override init() {
@@ -20,36 +18,13 @@ class PhoneConnectionHandler : NSObject {
         filePath = documentsPath + "/workouts.json"
     }
     
-    func initSession(withPendingContext: PhoneWatchSharedData) {
+    override func initSession(withPendingContext: PhoneWatchSharedData?) {
         if WCSession.isSupported() {
             session = WCSession.default
-            session.delegate = self
-            session.activate()
+            session!.delegate = self
+            session!.activate()
             pendingContext = withPendingContext
         }
-    }
-    
-    func sendDataToWatch(_ context:PhoneWatchSharedData) {
-        if session == nil {
-            initSession(withPendingContext: context)
-        }
-        else {
-            sendContext(context)
-        }
-    }
-}
-
-extension PhoneConnectionHandler : PhoneWatchConnection {
-    func synchronizeData(_ data:PhoneWatchSharedData) {
-        sendDataToWatch(data)
-    }
-    
-    func getUpdatedData(callback: (PhoneWatchSharedData) -> Void) {
-        // empty implementation
-    }
-    
-    func getLastData() -> [String : Any] {
-        return session.applicationContext
     }
 }
 
@@ -73,6 +48,13 @@ extension PhoneConnectionHandler : WCSessionDelegate {
     func sessionDidDeactivate(_ session: WCSession) {
         print("sessionDidDeactivate on iPhone")
     }
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        print("didReceiveApplicationContext on iPhone")
+        if let callback = updateCallback {
+            callback(applicationContext)
+        }
+    }
 }
 
 // MARK: - Private functions
@@ -87,3 +69,4 @@ extension PhoneConnectionHandler {
         }
     }
 }
+

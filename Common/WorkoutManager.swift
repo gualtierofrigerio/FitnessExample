@@ -126,6 +126,16 @@ class WorkoutManager : NSObject {
         guard let workout = getWorkout(atIndex: index) else {return nil}
         return WorkoutManager.makeSharableData(forWorkout: workout, atIndex: index)
     }
+    
+    func updateWithSharedData(_ sharedData:PhoneWatchSharedData) {
+        guard let sharedWorkout = WorkoutManager.getSharedWorkout(fromData: sharedData) else {return}
+        if sharedWorkout.isSingle {
+            workouts[sharedWorkout.index] = sharedWorkout.workouts[0]
+        }
+        else {
+            workouts = sharedWorkout.workouts
+        }
+    }
 }
 
 // MARK: - Utility functions
