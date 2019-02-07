@@ -28,7 +28,6 @@ class WorkoutListInterfaceController: WKInterfaceController {
                 self.getWorkoutsFromData(data)
             })
             getInitialData()
-            
         }
     }
     

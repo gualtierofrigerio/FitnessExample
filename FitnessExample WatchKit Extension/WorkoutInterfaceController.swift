@@ -29,6 +29,7 @@ class WorkoutInterfaceController: WKInterfaceController {
         super.awake(withContext: context)
         guard let extensionDelegate = WKExtension.shared().delegate as? ExtensionDelegate else {return}
         workoutManager = extensionDelegate.workoutManager
+        connectionHandler = extensionDelegate.connectionHandler
         if  let ctx = context as? Int,
             let workout = workoutManager?.getWorkout(atIndex: ctx) {
             index = ctx
@@ -76,6 +77,7 @@ extension WorkoutInterfaceController {
         heartBeatSamples = [Int]()
         healthKitManager.addHeartRateObserver { (sample) in
             print("read heart sample \(sample)")
+            self.heartBeatLabel.setText(String(sample))
             self.heartBeatSamples.append(sample)
         }
     }
@@ -84,6 +86,10 @@ extension WorkoutInterfaceController {
         let rate = averageHeartRateFromSamples(heartBeatSamples)
         workoutManager?.endWorkout(atIndex:index, averageHeartRate: rate)
         workoutRunning = false
+        if let workout = workoutManager?.getWorkout(atIndex: index) {
+            let data = WorkoutManager.makeSharableData(forWorkout: workout, atIndex: index)
+            connectionHandler?.synchronizeData(data)
+        }
     }
     
     private func averageHeartRateFromSamples(_ samples:[Int]) -> Int {
