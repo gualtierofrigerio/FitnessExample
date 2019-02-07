@@ -18,11 +18,13 @@ class HealthKitManager : NSObject {
     var anchor:HKQueryAnchor?
     var heartRateObserversCallbacks:[HeartRateObserverCallback]?
     var authorizationGranted = false
-    private var heartRateQuery:HKQuery?
+    private var heartRateQuery:HKAnchoredObjectQuery?
+    private var heartRateObserverQuery:HKObserverQuery?
+    private let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)
     
     func requestAuthorization(completion: @escaping (_ success:Bool) -> Void) {
         
-        guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+        guard let heartRateType = heartRateType else {
             print("cannot get heart rate type")
             return
         }
@@ -52,20 +54,23 @@ class HealthKitManager : NSObject {
 extension HealthKitManager {
     
     private func startMonitoringHeartRate() {
-        if let query = getHeartRateQuery(fromDate: Date()) {
+        if let query = getHeartRateAnchoredQuery(fromDate: Date()) {
             self.heartRateQuery = query
             healthStore.execute(query)
         }
+        
+//        use the observer query
+//        if let query = getHeartRateObserverQuery() {
+//            healthStore.execute(query)
+//        }
     }
     
-    private func getHeartRateQuery(fromDate: Date) -> HKQuery? {
-        guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+    private func getHeartRateAnchoredQuery(fromDate: Date) -> HKAnchoredObjectQuery? {
+        guard let heartRateType = heartRateType else {
             print("cannot get heart rate type")
             return nil
         }
-        let datePredicate = HKQuery.predicateForSamples(withStart: fromDate, end: Date(), options: .strictStartDate)
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate])
-        let heartRateQuery = HKAnchoredObjectQuery(type: heartRateType, predicate: compoundPredicate, anchor: nil, limit: Int(HKObjectQueryNoLimit)) { (query, sampleObjects, deleteObjects, anchor, error) in
+        let heartRateQuery = HKAnchoredObjectQuery(type: heartRateType, predicate: nil, anchor: nil, limit: Int(HKObjectQueryNoLimit)) { (query, sampleObjects, deleteObjects, anchor, error) in
             guard let anchor = anchor,
                 let sampleObjects = sampleObjects else {
                     print("no anchor or sampleObjects returned")
@@ -87,6 +92,43 @@ extension HealthKitManager {
         return heartRateQuery
     }
     
+    private func getHeartRateObserverQuery() -> HKObserverQuery? {
+        guard let heartRateType = heartRateType else {
+            print("cannot get heart rate type")
+            return nil
+        }
+        return HKObserverQuery.init(sampleType: heartRateType, predicate: nil, updateHandler: { queries, _, error in
+            self.fetchLatestHeartRate(completion: { samples in
+                guard let samples = samples else {return}
+                self.notifyHeartRateObservers(forSamples: samples)
+            })
+        })
+    }
+    
+    private func fetchLatestHeartRate(completion: @escaping (_ sample:[HKQuantitySample]?) -> Void) {
+        print("fetchLatest")
+        guard let heartRateType = heartRateType else {
+            completion(nil)
+            return
+            
+        }
+        let sortDescriptor = NSSortDescriptor(
+            key: HKSampleSortIdentifierStartDate,
+            ascending: false)
+        let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: Int(HKObjectQueryNoLimit), sortDescriptors: [sortDescriptor]) { (_, results, error) in
+                guard error == nil else {
+                    print("Error: \(error!.localizedDescription)")
+                    return
+                }
+            print("results returned")
+            guard let results = results else {return}
+            if results.count > 0 {
+                completion(results as? [HKQuantitySample])
+            }
+        }
+        self.healthStore.execute(query)
+    }
+    
     private func notifyHeartRateObservers(forSamples heartRateSamples: [HKSample]) {
         guard let samples = heartRateSamples as? [HKQuantitySample],
               let sample = samples.first,
@@ -99,6 +141,6 @@ extension HealthKitManager {
     }
     
     private func getIntValueForSample(_ sample:HKQuantitySample) -> Int {
-        return Int(sample.quantity.doubleValue(for: HKUnit.count()))
+        return Int(sample.quantity.doubleValue(for:HKUnit.init(from: "count/s"))*60)
     }
 }
