@@ -26,6 +26,7 @@ class WorkoutManager : NSObject {
     
     private var workouts = [Workout]()
     private var filePath:String!
+    private var basePath:String!
     
     var workoutsCount:Int {
         get {
@@ -36,6 +37,7 @@ class WorkoutManager : NSObject {
     override init() {
         super.init()
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        basePath = documentsPath
         filePath = documentsPath + "/workouts.json"
         if let loadedWorkouts = loadWorkouts() {
             workouts = loadedWorkouts
@@ -45,42 +47,28 @@ class WorkoutManager : NSObject {
         }
     }
     
-    func getWorkout(atIndex index:Int) -> Workout? {
-        if workouts.count < index - 1 {
-            return nil
-        }
-        return workouts[index]
+    func setFilePath(_ path:String) {
+        filePath = path
     }
     
-    func updateWorkout(atIndex index:Int,  workout:Workout) {
-        if workouts.count < index - 1 {
-            return
-        }
-        workouts[index] = workout
+    func pathForImage(withName name:String) -> String {
+        return basePath + "/" + name
     }
-    
-    func addWorkout(_ workout:Workout) -> Int {
+}
+
+// MARK: - Single workout functions
+
+extension WorkoutManager {
+    @discardableResult func addWorkout(_ workout:Workout) -> Int {
         workouts.append(workout)
         return workouts.count - 1
     }
     
-    func removeWorkout(atIndex index:Int) {
-        workouts.remove(at: index)
+    @discardableResult func addNewWorkout() -> Int {
+        let newWorkout = makeEmptyWorkout()
+        return addWorkout(newWorkout)
     }
     
-    func moveWorkout(fromIndex:Int, toIndex:Int) {
-        let workout = workouts.remove(at: fromIndex)
-        workouts.insert(workout, at: toIndex)
-    }
-    
-    func startWorkout(atIndex index:Int) {
-        if workouts.count < index - 1 {
-            return
-        }
-        var workout = workouts[index]
-        workout.startDate = Date()
-        workouts[index] = workout
-    }
     func endWorkout(atIndex index:Int, averageHeartRate:Int = 0) {
         if workouts.count < index - 1 {
             return
@@ -91,8 +79,53 @@ class WorkoutManager : NSObject {
         workouts[index] = workout
     }
     
-    func setFilePath(_ path:String) {
-        filePath = path
+    func getWorkout(atIndex index:Int) -> Workout? {
+        if workouts.count < index - 1 {
+            return nil
+        }
+        return workouts[index]
+    }
+    
+    func moveWorkout(fromIndex:Int, toIndex:Int) {
+        let workout = workouts.remove(at: fromIndex)
+        workouts.insert(workout, at: toIndex)
+    }
+    
+    func removeWorkout(atIndex index:Int) {
+        workouts.remove(at: index)
+    }
+    
+    func startWorkout(atIndex index:Int) {
+        if workouts.count < index - 1 {
+            return
+        }
+        var workout = workouts[index]
+        workout.startDate = Date()
+        workouts[index] = workout
+    }
+    
+    func updateWorkout(atIndex index:Int,  workout:Workout) {
+        if workouts.count < index - 1 {
+            return
+        }
+        workouts[index] = workout
+    }
+    
+    func updateAllWorkouts(_ workouts:[Workout]) {
+        self.workouts = workouts
+    }
+}
+
+// MARK: - Workouts functions
+
+extension WorkoutManager {
+    func getDataForAllWorkouts() -> PhoneWatchSharedData {
+        return WorkoutManager.makeSharableData(forWorkouts: workouts)
+    }
+    
+    func getDataForWorkout(atIndex index:Int) -> PhoneWatchSharedData? {
+        guard let workout = getWorkout(atIndex: index) else {return nil}
+        return WorkoutManager.makeSharableData(forWorkout: workout, atIndex: index)
     }
     
     func loadWorkouts() -> [Workout]? {
@@ -118,15 +151,6 @@ class WorkoutManager : NSObject {
         }
     }
     
-    func getDataForAllWorkouts() -> PhoneWatchSharedData {
-        return WorkoutManager.makeSharableData(forWorkouts: workouts)
-    }
-    
-    func getDataForWorkout(atIndex index:Int) -> PhoneWatchSharedData? {
-        guard let workout = getWorkout(atIndex: index) else {return nil}
-        return WorkoutManager.makeSharableData(forWorkout: workout, atIndex: index)
-    }
-    
     func updateWithSharedData(_ sharedData:PhoneWatchSharedData) {
         guard let sharedWorkout = WorkoutManager.getSharedWorkout(fromData: sharedData) else {return}
         if sharedWorkout.isSingle {
@@ -138,9 +162,14 @@ class WorkoutManager : NSObject {
     }
 }
 
-// MARK: - Utility functions
+// MARK: - Private utility functions
 
 extension WorkoutManager {
+    
+    private func makeEmptyWorkout() -> Workout {
+        let workout = Workout(title: "Title", description: "Description")
+        return workout
+    }
     
     private func getDefaultWorkouts() -> [Workout] {
         let w1 = Workout(title: "Default 1", description: "Description 1")

@@ -14,6 +14,7 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="WorkoutListInterfaceController" customModule="FitnessExample_WatchKit_Extension">
                     <items>
+                        <label alignment="left" text="Workouts" id="kmF-Yb-eAv"/>
                         <table alignment="left" id="bMW-EW-rOC">
                             <items>
                                 <tableRow identifier="WorkoutListRow" id="crq-P6-Oet" customClass="WorkoutListRow" customModule="FitnessExample_WatchKit_Extension">
@@ -67,7 +68,9 @@
                         <group width="1" alignment="left" id="wHx-WL-eRC">
                             <items>
                                 <label height="20" alignment="left" text="BPM" id="vhX-Ph-cr1"/>
-                                <label alignment="left" text="Label" id="Zz1-6A-hTT"/>
+                                <label alignment="left" text="rate label" id="Zz1-6A-hTT">
+                                    <color key="textColor" red="0.81065538189999997" green="0.15603298609999999" blue="0.1886121962" alpha="1" colorSpace="calibratedRGB"/>
+                                </label>
                             </items>
                         </group>
                         <button width="1" alignment="left" title="Start" id="sh3-vP-5Ai">

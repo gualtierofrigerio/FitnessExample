@@ -30,10 +30,17 @@ class WorkoutTableViewController: UITableViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     @IBAction func actionsButtonTap(_ sender: Any) {
         let actionSheet = UIAlertController(title: "", message: "Chose action", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "cancel", style: .cancel , handler:{ (UIAlertAction)in
             print("cancel action")
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Add workout", style: .default , handler:{ (UIAlertAction)in
+            self.performSegue(withIdentifier: "workoutSegue", sender: nil)
         }))
         actionSheet.addAction(UIAlertAction(title: "Save", style: .default , handler:{ (UIAlertAction)in
             self.workoutManager.saveWorkouts()
@@ -49,10 +56,12 @@ class WorkoutTableViewController: UITableViewController {
             destination.workoutManager = workoutManager
             if sender is UITableViewCell {
                 destination.workoutIndex = self.tableView.indexPathForSelectedRow?.row ?? 0
+                destination.connectionHandler = self.connectionHandler
             }
             else {
-                let newWorkout = Workout(title: "New workout", description: "")
-                destination.workoutIndex = workoutManager.addWorkout(newWorkout)
+                let newIndex = self.workoutManager.addNewWorkout()
+                destination.workoutIndex = newIndex
+                destination.startEditing = true
             }
         }
     }

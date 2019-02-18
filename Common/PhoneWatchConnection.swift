@@ -72,3 +72,20 @@ extension PhoneWatchConnectionHandler : PhoneWatchConnection {
         updateCallback = callback
     }
 }
+
+// MARK: PhoneWatchConnection static functions
+
+extension PhoneWatchConnectionHandler {
+    static func createDirectory(atPath path:String) {
+        let manager = FileManager()
+        if manager.fileExists(atPath: path) == false {
+            let directoryURL = URL(fileURLWithPath: path)
+            do {
+                try manager.createDirectory(at: directoryURL, withIntermediateDirectories: false, attributes: nil)
+            }
+            catch {
+                print("error while creating directory at path \(path)")
+            }
+        }
+    }
+}

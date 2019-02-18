@@ -9,7 +9,7 @@
 import Foundation
 
 struct Workout : Codable {
-    var imagePath:String?   // optional path of the image describing the exercise
+    var imageName:String?   // optional path of the image describing the exercise
     var title:String!
     var description:String!
     var startDate:Date?
