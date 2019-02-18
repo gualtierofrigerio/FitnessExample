@@ -59,6 +59,7 @@ extension WorkoutListInterfaceController {
         if let sharedWorkouts = WorkoutManager.getSharedWorkout(fromData: data) {
             if sharedWorkouts.isSingle == false {
                 self.workouts = sharedWorkouts.workouts
+                workoutManager?.updateAllWorkouts(self.workouts)
                 self.refreshTable()
             }
         }

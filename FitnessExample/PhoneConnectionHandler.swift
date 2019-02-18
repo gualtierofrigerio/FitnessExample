@@ -63,7 +63,6 @@ extension PhoneConnectionHandler : WCSessionDelegate {
             print("activationDidComplete on iPhone")
             if let context = pendingContext {
                 sendContext(context)
-                pendingContext = nil
             }
         }
     }
@@ -88,6 +87,15 @@ extension PhoneConnectionHandler : WCSessionDelegate {
         transferCompleted(fileTransfer: fileTransfer)
     }
     
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        if let action = message["action"] as? String {
+            if action == "sendWorkouts" {
+                if let pendingContext = pendingContext {
+                    replyHandler(pendingContext)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Private functions

@@ -34,9 +34,7 @@ class WorkoutInterfaceController: WKInterfaceController {
             let workout = workoutManager?.getWorkout(atIndex: ctx) {
             index = ctx
             currentWorkout = workout
-            titleLabel.setText(workout.title)
-            descriptionLabel.setText(workout.description)
-            changeButtonTitle()
+            updateUIWithWorkout(workout)
         }
     }
     
@@ -47,16 +45,7 @@ class WorkoutInterfaceController: WKInterfaceController {
     override func didDeactivate() {
         super.didDeactivate()
     }
-    
-    func changeButtonTitle() {
-        if workoutRunning {
-            workoutButton.setTitle("Stop")
-        }
-        else {
-            workoutButton.setTitle("Start")
-        }
-    }
-    
+
     @IBAction func workoutButtonTap() {
         if workoutRunning == false {
             startWorkout()
@@ -68,9 +57,31 @@ class WorkoutInterfaceController: WKInterfaceController {
     }
 }
 
-// MARK: Private
+// MARK: - Private
 
 extension WorkoutInterfaceController {
+    
+    private func updateUIWithWorkout(_ workout:Workout) {
+        titleLabel.setText(workout.title)
+        descriptionLabel.setText(workout.description)
+        if let imageName = workout.imageName,
+            let imageFullPath = connectionHandler?.fullPathForImage(withName: imageName) {
+            let image = UIImage(contentsOfFile: imageFullPath)
+            workoutImage.setImage(image)
+        }
+        changeButtonTitle()
+    }
+    
+    private func changeButtonTitle() {
+        if workoutRunning {
+            workoutButton.setTitle("Stop")
+        }
+        else {
+            workoutButton.setTitle("Start")
+        }
+    }
+    
+    
     private func startWorkout() {
         workoutManager?.startWorkout(atIndex:index)
         workoutRunning = true
