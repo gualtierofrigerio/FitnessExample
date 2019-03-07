@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-typealias HeartRateObserverCallback = ((Int) -> Void)
+typealias HeartRateObserverCallback = ((Double) -> Void)
 
 class HealthKitManager : NSObject {
     
@@ -46,6 +46,24 @@ class HealthKitManager : NSObject {
             startMonitoringHeartRate()
         }
         heartRateObserversCallbacks?.append(callback)
+    }
+    
+    func saveWorkoutToHealthKit(_ workout:Workout) {
+        guard let hkWorkout = createHKWorkoutFromWorkout(workout) else {return}
+        healthStore.save(hkWorkout) { (success, error) in
+            guard success else {
+                print("error while saving workout to healthkit \(String(describing: error?.localizedDescription))")
+                return
+            }
+            if let samples = self.getSamplesFromWorkout(workout) {
+                self.healthStore.add(samples, to: hkWorkout, completion: { (success, error) in
+                    guard success else {
+                        print("error adding samples to workout \(String(describing: error?.localizedDescription))")
+                        return
+                    }
+                })
+            }
+        }
     }
 }
 
@@ -134,13 +152,40 @@ extension HealthKitManager {
               let sample = samples.first,
               let heartRateObserversCallbacks = heartRateObserversCallbacks else {return}
         
-        let value = getIntValueForSample(sample)
+        let value = getDoubleValueForSample(sample)
         for callback in heartRateObserversCallbacks {
             callback(value)
         }
     }
     
-    private func getIntValueForSample(_ sample:HKQuantitySample) -> Int {
-        return Int(sample.quantity.doubleValue(for:HKUnit.init(from: "count/s"))*60)
+    private func getDoubleValueForSample(_ sample:HKQuantitySample) -> Double {
+        return sample.quantity.doubleValue(for:HKUnit.init(from: "count/s"))*60
+    }
+}
+
+// MARK: - HealthKit workout
+
+extension HealthKitManager {
+    private func createHKWorkoutFromWorkout(_ workout:Workout) -> HKWorkout? {
+        guard let startDate = workout.startDate,
+              let endDate = workout.endDate,
+              let duration = workout.getDuration() else {return nil}
+        let calories = HKQuantity(unit: HKUnit.kilocalorie(),
+                                  doubleValue: workout.getBurnedCalories())
+        let hkWorkout = HKWorkout(activityType: .other, start: startDate, end: endDate, duration: duration, totalEnergyBurned: calories, totalDistance: nil, metadata: nil)
+        return hkWorkout
+    }
+    
+    private func getSamplesFromWorkout(_ workout:Workout) -> [HKSample]? {
+        guard let startDate = workout.startDate,
+            let endDate = workout.endDate,
+            let averageHeartRate = workout.averageHeartRate,
+            let heartRateType = heartRateType else {return nil}
+        let heartRateForInterval = HKQuantity(unit: HKUnit(from: "count/min"),
+                                              doubleValue: averageHeartRate)
+        let heartRateForIntervalSample =
+            HKQuantitySample(type: heartRateType, quantity: heartRateForInterval,
+                             start: startDate, end: endDate)
+        return [heartRateForIntervalSample]
     }
 }

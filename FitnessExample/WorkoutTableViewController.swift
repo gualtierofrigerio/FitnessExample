@@ -48,6 +48,9 @@ class WorkoutTableViewController: UITableViewController {
         actionSheet.addAction(UIAlertAction(title: "Send to Watch", style: .default , handler:{ (UIAlertAction)in
             self.sendDataToWatch()
         }))
+        actionSheet.addAction(UIAlertAction(title: "Save to HK", style: .default , handler:{ (UIAlertAction)in
+            self.saveWorkoutsToHealthKit()
+        }))
         self.present(actionSheet, animated: true, completion: nil)
     }
     
@@ -107,7 +110,13 @@ extension WorkoutTableViewController {
 // MARK: - Private functions
 
 extension WorkoutTableViewController {
-    func sendDataToWatch() {
+    private func saveWorkoutsToHealthKit() {
+        for workout in workoutManager.getAllWorkouts() {
+            healthKitManager.saveWorkoutToHealthKit(workout)
+        }
+    }
+    
+    private func sendDataToWatch() {
         let data = self.workoutManager.getDataForAllWorkouts()
         self.connectionHandler.sendDataToCounterpart(data)
     }

@@ -69,7 +69,7 @@ extension WorkoutManager {
         return addWorkout(newWorkout)
     }
     
-    func endWorkout(atIndex index:Int, averageHeartRate:Int = 0) {
+    func endWorkout(atIndex index:Int, averageHeartRate:Double = 0) {
         if workouts.count < index - 1 {
             return
         }
@@ -77,6 +77,10 @@ extension WorkoutManager {
         workout.endDate = Date()
         workout.averageHeartRate = averageHeartRate
         workouts[index] = workout
+    }
+    
+    func getAllWorkouts() -> [Workout] {
+        return workouts
     }
     
     func getWorkout(atIndex index:Int) -> Workout? {

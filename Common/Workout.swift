@@ -14,7 +14,7 @@ struct Workout : Codable {
     var description:String!
     var startDate:Date?
     var endDate:Date?
-    var averageHeartRate:Int?
+    var averageHeartRate:Double?
     
     init(title:String, description:String) {
         self.title = title
@@ -22,7 +22,9 @@ struct Workout : Codable {
     }
     
     func getDuration() -> TimeInterval? {
-        return nil
+        guard let startDate = startDate,
+              let endDate = endDate else {return nil}
+        return endDate.timeIntervalSince(startDate)
     }
     
     func getStartDateString() -> String? {
@@ -41,9 +43,17 @@ struct Workout : Codable {
     
     func getHeartRateStringValue() -> String {
         if let rate = averageHeartRate {
-            return String(rate) + " bpm"
+            return String(Int(rate)) + " bpm"
         }
         return "n/a"
+    }
+    
+    func getBurnedCalories() -> Double {
+        guard let duration = getDuration() else {return 0}
+        let cph = 100.0 // calories per hour made up value
+        let hours = duration / 3600
+        let calories = cph * hours
+        return calories
     }
 }
 
