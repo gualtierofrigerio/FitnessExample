@@ -23,7 +23,7 @@ class WorkoutInterfaceController: WKInterfaceController {
     let healthKitManager = HealthKitManager.sharedInstance
     var index:Int = 0
     var workoutRunning = false
-    var heartBeatSamples = [Int]()
+    var heartBeatSamples = [Double]()
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -85,7 +85,7 @@ extension WorkoutInterfaceController {
     private func startWorkout() {
         workoutManager?.startWorkout(atIndex:index)
         workoutRunning = true
-        heartBeatSamples = [Int]()
+        heartBeatSamples = [Double]()
         healthKitManager.addHeartRateObserver { (sample) in
             print("read heart sample \(sample)")
             self.heartBeatLabel.setText(String(sample))
@@ -103,9 +103,9 @@ extension WorkoutInterfaceController {
         }
     }
     
-    private func averageHeartRateFromSamples(_ samples:[Int]) -> Int {
+    private func averageHeartRateFromSamples(_ samples:[Double]) -> Double {
         let sum = samples.reduce(0, +)
-        let average = samples.count > 0 ? sum / samples.count : 0
+        let average = samples.count > 0 ? sum / Double(samples.count) : 0
         return average
     }
 }

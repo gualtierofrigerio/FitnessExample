@@ -29,7 +29,7 @@ class HealthKitManager : NSObject {
             return
         }
         let readTypes = Set([HKObjectType.workoutType(), heartRateType])
-        let shareTypes = Set([HKObjectType.workoutType()])
+        let shareTypes = Set([HKObjectType.workoutType(), heartRateType])
         
         healthStore.requestAuthorization(toShare: shareTypes, read: readTypes) { (success, error) in
             if success == false {
